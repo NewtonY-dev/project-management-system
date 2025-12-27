@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import { initDatabase } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
+import projectRoutes from "./routes/projectRoutes.js";
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ const PORT = process.env.PORT || 3000;
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/projects", projectRoutes);
 
 // Basic route
 app.get("/", (req, res) => {
