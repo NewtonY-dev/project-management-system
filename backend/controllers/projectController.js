@@ -71,3 +71,48 @@ export const createProject = async (req, res) => {
     res.status(500).json({ error: "Failed to create project" });
   }
 };
+
+// Get all projects for the current PM
+export const getProjects = async (req, res) => {
+  try {
+    // 1. Check if user is a Project Manager
+    if (req.user.role !== "project_manager") {
+      return res.status(403).json({
+        error: "Only Project Managers can view projects",
+      });
+    }
+
+    // 2. Get projects from database
+    const [projects] = await db.query(
+      `SELECT 
+        p.id, 
+        p.title,
+        (SELECT COUNT(*) FROM tasks t WHERE t.project_id = p.id AND t.status = 'todo') as todo_count,
+        (SELECT COUNT(*) FROM tasks t WHERE t.project_id = p.id AND t.status = 'in_progress') as in_progress_count,
+        (SELECT COUNT(*) FROM tasks t WHERE t.project_id = p.id AND t.status = 'done') as done_count
+       FROM projects p
+       WHERE p.owner_id = ?
+       ORDER BY p.created_at DESC`,
+      [req.user.id]
+    );
+
+    // 3. Format the response
+    const formattedProjects = projects.map((project) => ({
+      id: project.id,
+      title: project.title,
+      task_summary: {
+        todo: project.todo_count,
+        in_progress: project.in_progress_count,
+        done: project.done_count,
+      },
+    }));
+
+    // 4. Return the projects
+    res.status(200).json({
+      projects: formattedProjects,
+    });
+  } catch (error) {
+    console.error("Get projects error:", error);
+    res.status(500).json({ error: "Failed to retrieve projects" });
+  }
+};
