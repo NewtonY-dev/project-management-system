@@ -226,3 +226,37 @@ export const assignTask = async (req, res) => {
     res.status(500).json({ error: "Failed to assign task" });
   }
 };
+
+// Get tasks assigned to current team member
+export const getMyTasks = async (req, res) => {
+  try {
+    // 1. Check user is Team Member
+    if (req.user.role !== "team_member") {
+      return res.status(403).json({
+        error: "Only Team Members can view assigned tasks",
+      });
+    }
+
+    // 2. Query tasks assigned to current user
+    const [tasks] = await db.query(
+      `SELECT 
+        t.id,
+        t.title,
+        t.status,
+        p.title as project_title
+       FROM tasks t
+       JOIN projects p ON t.project_id = p.id
+       WHERE t.assignee_id = ?
+       ORDER BY t.updated_at DESC`,
+      [req.user.id]
+    );
+
+    // 3. Return response
+    res.status(200).json({
+      tasks: tasks,
+    });
+  } catch (error) {
+    console.error("Get my tasks error:", error);
+    res.status(500).json({ error: "Failed to fetch your tasks" });
+  }
+};
