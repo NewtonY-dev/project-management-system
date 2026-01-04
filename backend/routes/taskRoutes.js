@@ -4,6 +4,7 @@ import {
   assignTask,
   getMyTasks,
   updateTaskStatus,
+  addComment,
 } from "../controllers/taskController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 
@@ -16,5 +17,7 @@ router.put("/:taskId/assign", authMiddleware, assignTask);
 router.get("/me", authMiddleware, getMyTasks);
 
 router.put("/:taskId/status", authMiddleware, updateTaskStatus);
+
+router.post("/:taskId/comments", authMiddleware, addComment);
 
 export default router;
