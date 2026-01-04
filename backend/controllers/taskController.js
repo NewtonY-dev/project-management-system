@@ -19,7 +19,7 @@ const validateTaskInput = (title, description) => {
   return errors;
 };
 
-// Main create task function
+// Create a new task under a project
 export const createTask = async (req, res) => {
   try {
     // 1. Check user role
@@ -258,5 +258,110 @@ export const getMyTasks = async (req, res) => {
   } catch (error) {
     console.error("Get my tasks error:", error);
     res.status(500).json({ error: "Failed to fetch your tasks" });
+  }
+};
+
+// Update task status by assigned team member
+export const updateTaskStatus = async (req, res) => {
+  try {
+    // 1. Validate task ID
+    const taskId = parseInt(req.params.taskId);
+    if (isNaN(taskId) || taskId <= 0) {
+      return res.status(400).json({
+        error: "Invalid task ID",
+      });
+    }
+
+    // 2. Validate status
+    const { status } = req.body;
+    const validStatuses = ["todo", "in_progress", "done"];
+
+    if (!status) {
+      return res.status(400).json({ error: "Status is required" });
+    }
+
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({
+        error: "Invalid status value",
+        details: `Status must be one of: ${validStatuses.join(", ")}`,
+      });
+    }
+
+    // 3. Check task exists and get current status
+    const [tasks] = await db.query(
+      `SELECT 
+        t.id,
+        t.title,
+        t.status,
+        t.assignee_id,
+        p.title as project_title
+       FROM tasks t
+       JOIN projects p ON t.project_id = p.id
+       WHERE t.id = ?`,
+      [taskId]
+    );
+
+    if (tasks.length === 0) {
+      return res.status(404).json({
+        error: "Task not found",
+        details: `No task exists with ID ${taskId}`,
+      });
+    }
+
+    const task = tasks[0];
+
+    // 4. Check user is assigned to this task
+    if (task.assignee_id !== req.user.id || task.assignee_id === null) {
+      return res.status(403).json({
+        error: "You can only update status of your assigned tasks",
+        details: `You are not assigned to task '${task.title}' in project '${task.project_title}"`,
+      });
+    }
+
+    // 5. Validate one-way status transition
+    const statusOrder = { todo: 1, in_progress: 2, done: 3 };
+
+    if (statusOrder[status] < statusOrder[task.status]) {
+      return res.status(400).json({
+        error: "Invalid status transition",
+        details: `Cannot move task from "${task.status}" to "${status}"`,
+      });
+    }
+
+    // 6. Update task status
+    await db.query(
+      "UPDATE tasks SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+      [status, taskId]
+    );
+
+    // 7. Get updated task
+    const [updatedTasks] = await db.query(
+      `SELECT 
+        t.id,
+        t.title,
+        t.status,
+        t.updated_at,
+        p.title as project_title
+       FROM tasks t
+       JOIN projects p ON t.project_id = p.id
+       WHERE t.id = ?`,
+      [taskId]
+    );
+
+    const updatedTask = updatedTasks[0];
+
+    // 8. Return success
+    res.status(200).json({
+      message: "Status updated",
+      task: {
+        id: updatedTask.id,
+        title: updatedTask.title,
+        status: updatedTask.status,
+        updated_at: updatedTask.updated_at,
+      },
+    });
+  } catch (error) {
+    console.error("Update task status error:", error);
+    res.status(500).json({ error: "Failed to update task status" });
   }
 };
