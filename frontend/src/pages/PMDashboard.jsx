@@ -66,7 +66,7 @@ export default function PMDashboard() {
 
     try {
       const data = await getProjects();
-      setProjects(data.projects || []);
+      setProjects(data || []);
     } catch (err) {
       setError(err.message || "Failed to load projects.");
     } finally {

@@ -1,0 +1,464 @@
+/* ===================================
+   PROJECT DETAIL & TASK BOARD STYLES
+   =================================== */
+
+/* Header & Navigation */
+.dashboard__header-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.dashboard__back-btn {
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.dashboard__back-btn:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+  border-color: var(--color-border-hover);
+}
+
+/* Project Detail Header */
+.project-detail__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-5xl);
+  gap: var(--spacing-2xl);
+}
+
+.project-detail__info {
+  flex: 1;
+}
+
+.project-detail__title-section {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.project-detail__title {
+  font-size: 2.5rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-md) 0;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.project-detail__description {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.6;
+  max-width: 800px;
+}
+
+.project-detail__stats {
+  display: flex;
+  gap: var(--spacing-3xl);
+}
+
+.project-detail__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-xs);
+}
+
+.project-detail__stat-number {
+  font-size: 2rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.project-detail__stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Task Board Layout */
+.task-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-3xl);
+  min-height: 600px;
+}
+
+.task-board__column {
+  background: var(--color-bg);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+}
+
+.task-board__column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 2px solid var(--color-border);
+}
+
+.task-board__column-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.task-board__column-count {
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.task-board__column-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.task-board__empty-state {
+  text-align: center;
+  padding: var(--spacing-4xl) var(--spacing-2xl);
+  color: var(--color-text-light);
+  font-style: italic;
+}
+
+/* Task Card Component */
+.task-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.task-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.task-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-md);
+  gap: var(--spacing-sm);
+}
+
+.task-card__title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin: 0;
+  line-height: var(--line-height-relaxed);
+  flex: 1;
+}
+
+.task-card__status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.task-card__description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--spacing-lg) 0;
+  line-height: var(--line-height-relaxed);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  display: box;
+  line-clamp: 3;
+  box-orient: vertical;
+  overflow: hidden;
+}
+
+.task-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+/* Task Assignment Controls */
+.task-card__assign-section {
+  position: relative;
+  z-index: 1;
+}
+
+.task-card__assign-btn {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.task-card__assign-btn:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.task-card__assign-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.task-card__assign-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 9999;
+  min-width: 150px;
+  margin-top: var(--spacing-xs);
+}
+
+.task-card__assign-dropdown-header {
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.task-card__assign-option {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: left;
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-card__assign-option:hover:not(:disabled) {
+  background: var(--color-bg);
+}
+
+.task-card__assign-option.current-assignee {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.task-card__assign-option:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.task-card__assignee-with-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.task-card__reassign-btn {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.task-card__reassign-btn:hover:not(:disabled) {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+  transform: rotate(90deg);
+}
+
+.task-card__reassign-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.task-card__assignee-name {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Task Status Controls */
+.task-card__status-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.task-card__status-btn {
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.task-card__status-btn:hover {
+  transform: translateY(-1px);
+}
+
+.task-card__status-btn--todo:hover {
+  background: var(--color-todo);
+  color: white;
+  border-color: var(--color-todo);
+}
+
+.task-card__status-btn--progress:hover {
+  background: var(--color-progress);
+  color: white;
+  border-color: var(--color-progress);
+}
+
+.task-card__status-btn--done:hover {
+  background: var(--color-done);
+  color: white;
+  border-color: var(--color-done);
+}
+
+/* ===================================
+   RESPONSIVE DESIGN
+   =================================== */
+
+@media (max-width: 1024px) {
+  .task-board {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-2xl);
+  }
+  
+  .task-board__column {
+    min-height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard__header-nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+  
+  .project-detail__title {
+    font-size: 2rem;
+  }
+  
+  .project-detail__header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-xl);
+  }
+  
+  .project-detail__stats {
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+  
+  .project-detail__stat {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
+  
+  .project-detail__stat-number {
+    font-size: 1.5rem;
+  }
+  
+  .task-card__footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-sm);
+  }
+  
+  .task-card__status-actions {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard__header-content {
+    padding: var(--spacing-lg) var(--spacing-xl);
+  }
+  
+  .dashboard__main {
+    padding: var(--spacing-xl);
+  }
+  
+  .project-detail__title {
+    font-size: 1.75rem;
+  }
+  
+  .project-detail__description {
+    font-size: var(--font-size-base);
+  }
+  
+  .task-board__column {
+    padding: var(--spacing-md);
+  }
+  
+  .task-card {
+    padding: var(--spacing-md);
+  }
+  
+  .task-card__header {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+  
+  .task-card__status-indicator {
+    align-self: flex-start;
+    margin-top: 0;
+  }
+}

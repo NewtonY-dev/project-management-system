@@ -47,8 +47,8 @@ export default function ProjectCard({ project }) {
     task_summary.todo + task_summary.in_progress + task_summary.done;
 
   const handleCardClick = () => {
-    // Navigate to project detail page (will be implemented later)
-    console.log(`Navigate to project ${project.id}`);
+    // Navigate to project detail page
+    navigate(`/projects/${project.id}`);
   };
 
   const handleKeyDown = (e) => {

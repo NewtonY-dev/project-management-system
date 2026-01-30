@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import PMDashboard from "./pages/PMDashboard";
+import ProjectDetail from "./pages/ProjectDetail";
 import TMDashboard from "./pages/TMDashboard";
 import { getUser, dashboardPathForRole } from "./api/session";
 import { RequireAuth, RequireRole } from "./routes/guards";
@@ -22,6 +23,7 @@ export default function App() {
         <Route element={<RequireAuth />}>
           <Route element={<RequireRole role="project_manager" />}>
             <Route path="/pm" element={<PMDashboard />} />
+            <Route path="/projects/:projectId" element={<ProjectDetail />} />
           </Route>
           <Route element={<RequireRole role="team_member" />}>
             <Route path="/tm" element={<TMDashboard />} />
