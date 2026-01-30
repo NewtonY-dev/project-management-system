@@ -32,6 +32,10 @@ export async function assignTask(taskId, userId) {
 }
 
 // User-related endpoints
+export async function getMyTasks() {
+  return apiRequest("/api/tasks/me", { method: "GET" });
+}
+
 export async function getTeamMembers() {
   return apiRequest("/api/users?role=team_member", { method: "GET" });
 }

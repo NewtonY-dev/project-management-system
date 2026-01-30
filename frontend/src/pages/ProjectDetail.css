@@ -370,6 +370,107 @@
 }
 
 /* ===================================
+   TM DASHBOARD STYLES
+   =================================== */
+
+/* TM Dashboard Stats */
+.tm-dashboard__stats {
+  display: flex;
+  gap: var(--spacing-2xl);
+  margin-bottom: var(--spacing-4xl);
+  padding: var(--spacing-lg);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.tm-dashboard__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex: 1;
+}
+
+.tm-dashboard__stat-number {
+  font-size: 2rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.tm-dashboard__stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Task Card Project Info */
+.task-card__project {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--color-bg);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+}
+
+.task-card__project-label {
+  color: var(--color-text-light);
+  font-weight: var(--font-weight-medium);
+}
+
+.task-card__project-name {
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Clickable Task Card Styles */
+.task-card--clickable {
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.task-card--clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border-color: var(--color-primary);
+}
+
+.task-card--clickable:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Task Card Status Display */
+.task-card__status-text {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-light);
+}
+
+.task-card__status-value {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  text-transform: capitalize;
+}
+
+.task-card__click-hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+  opacity: 0.8;
+  transition: opacity var(--transition-base);
+}
+
+.task-card--clickable:hover .task-card__click-hint {
+  opacity: 1;
+}
+
+/* ===================================
    RESPONSIVE DESIGN
    =================================== */
 
@@ -413,6 +514,22 @@
   }
   
   .project-detail__stat-number {
+    font-size: 1.5rem;
+  }
+  
+  .tm-dashboard__stats {
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+  
+  .tm-dashboard__stat {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+  }
+  
+  .tm-dashboard__stat-number {
     font-size: 1.5rem;
   }
   
