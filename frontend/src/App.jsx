@@ -4,6 +4,7 @@ import Signup from "./pages/Signup";
 import PMDashboard from "./pages/PMDashboard";
 import ProjectDetail from "./pages/ProjectDetail";
 import TMDashboard from "./pages/TMDashboard";
+import TaskDetail from "./pages/TaskDetail";
 import { getUser, dashboardPathForRole } from "./api/session";
 import { RequireAuth, RequireRole } from "./routes/guards";
 
@@ -28,6 +29,7 @@ export default function App() {
           <Route element={<RequireRole role="team_member" />}>
             <Route path="/tm" element={<TMDashboard />} />
           </Route>
+          <Route path="/tasks/:taskId" element={<TaskDetail />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

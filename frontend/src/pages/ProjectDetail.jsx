@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getUser, logout } from "../api/session";
+import { getUser, logout, dashboardPathForRole } from "../api/session";
 import {
   getProject,
   getProjectTasks,
@@ -10,6 +10,7 @@ import {
 } from "../api/tasks";
 import TaskCard from "../components/TaskCard";
 import CreateTaskModal from "../components/CreateTaskModal";
+import { LoadingSpinner, ErrorMessage } from "../components/Dashboard";
 import "./Dashboard.css";
 import "./ProjectDetail.css";
 
@@ -30,33 +31,6 @@ const TASK_COLUMNS = [
   },
   { key: TASK_STATUS.DONE, title: "Done", emptyMessage: "No completed tasks" },
 ];
-
-// LoadingSpinner Component
-function LoadingSpinner() {
-  return (
-    <div className="dashboard__loading">
-      <div className="dashboard__spinner"></div>
-      <p>Loading project details...</p>
-    </div>
-  );
-}
-
-// ErrorMessage Component
-function ErrorMessage({ error, onRetry }) {
-  return (
-    <div className="dashboard__error">
-      <span>{error}</span>
-      <button
-        className="dashboard__retry-btn"
-        onClick={onRetry}
-        type="button"
-        aria-label="Retry loading"
-      >
-        Retry
-      </button>
-    </div>
-  );
-}
 
 // TaskBoardColumn Component - Individual column in the kanban board
 function TaskBoardColumn({
@@ -192,7 +166,7 @@ export default function ProjectDetail() {
         ...task,
         // Handle both old and new formats for backward compatibility
         assigned_name: task.assignee?.name || task.assigned_name,
-        assigned_to: task.assignee?.id || task.assigned_to,
+        assigned_to: task.assignee?.id || task.assignee_id,
       }));
 
       setTasks(formattedTasks);
@@ -251,6 +225,7 @@ export default function ProjectDetail() {
                 ...task,
                 assigned_name: assignee.name,
                 assigned_to: userId,
+                assignee_id: userId, // Add for consistency
                 // Update assignee object for new format
                 assignee: { id: userId, name: assignee.name },
               }
@@ -264,7 +239,8 @@ export default function ProjectDetail() {
 
   // Handles back to dashboard navigation
   function handleBackToDashboard() {
-    navigate("/pm");
+    const dashboardPath = dashboardPathForRole(user?.role);
+    navigate(dashboardPath);
   }
 
   if (loading) {

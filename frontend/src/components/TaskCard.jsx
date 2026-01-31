@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Task status configuration
 const TASK_STATUS = {
@@ -117,6 +118,7 @@ export default function TaskCard({
 }) {
   const [isAssigning, setIsAssigning] = useState(false);
   const showAssignDropdown = activeDropdownId === task.id;
+  const navigate = useNavigate();
 
   const handleStatusChange = (newStatus) => {
     onStatusChange(task.id, newStatus);
@@ -136,8 +138,12 @@ export default function TaskCard({
     });
   };
 
+  const handleCardClick = () => {
+    navigate(`/tasks/${task.id}`);
+  };
+
   return (
-    <div className="task-card">
+    <div className="task-card task-card--clickable" onClick={handleCardClick}>
       <div className="task-card__header">
         <h4 className="task-card__title">{task.title}</h4>
         <div

@@ -120,9 +120,7 @@ export default function TMDashboard() {
 
   const handleTaskClick = (task) => {
     // Navigate to task detail (Step 4)
-    // TODO: Update this when Task Detail route is implemented
-    console.log("Navigate to task detail:", task.id);
-    // navigate(`/tasks/${task.id}`);
+    navigate(`/tasks/${task.id}`);
   };
 
   const renderHeader = () => (

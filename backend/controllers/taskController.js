@@ -366,6 +366,79 @@ export const updateTaskStatus = async (req, res) => {
   }
 };
 
+// Get detailed task information including comments
+export const getTaskDetail = async (req, res) => {
+  try {
+    // 1. Validate task ID
+    const taskId = parseInt(req.params.taskId);
+    if (isNaN(taskId) || taskId <= 0) {
+      return res.status(400).json({
+        error: "Invalid task ID",
+      });
+    }
+
+    // 2. Get task details with project and assignee info
+    const [tasks] = await db.query(
+      `SELECT 
+        t.id,
+        t.title,
+        t.description,
+        t.status,
+        t.assignee_id,
+        t.created_at,
+        t.updated_at,
+        p.title as project_title,
+        p.id as project_id,
+        u.name as assigned_name
+       FROM tasks t
+       JOIN projects p ON t.project_id = p.id
+       LEFT JOIN users u ON t.assignee_id = u.id
+       WHERE t.id = ?`,
+      [taskId]
+    );
+
+    if (tasks.length === 0) {
+      return res.status(404).json({
+        error: "Task not found",
+        details: `No task exists with ID ${taskId}`,
+      });
+    }
+
+    const task = tasks[0];
+    
+    // Debug logging
+    console.log('Task detail for ID', taskId, ':', {
+      assignee_id: task.assignee_id,
+      assigned_name: task.assigned_name,
+      project_title: task.project_title
+    });
+
+    // 3. Get comments for this task
+    const [comments] = await db.query(
+      `SELECT 
+        c.id,
+        c.content,
+        c.author_id,
+        u.name as author_name,
+        c.created_at
+       FROM comments c
+       JOIN users u ON c.author_id = u.id
+       WHERE c.task_id = ?
+       ORDER BY c.created_at ASC`,
+      [taskId]
+    );
+
+    // 4. Return task with comments
+    res.status(200).json({
+      ...task,
+      comments: comments,
+    });
+  } catch (error) {
+    console.error("Get task detail error:", error);
+    res.status(500).json({ error: "Failed to fetch task details" });
+  }
+};
+
 // Add comment to a task
 export const addComment = async (req, res) => {
   try {

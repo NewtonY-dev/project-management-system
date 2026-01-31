@@ -39,3 +39,15 @@ export async function getMyTasks() {
 export async function getTeamMembers() {
   return apiRequest("/api/users?role=team_member", { method: "GET" });
 }
+
+// Task detail endpoints
+export async function getTaskDetail(taskId) {
+  return apiRequest(`/api/tasks/${taskId}`, { method: "GET" });
+}
+
+export async function addTaskComment(taskId, content) {
+  return apiRequest(`/api/tasks/${taskId}/comments`, {
+    method: "POST",
+    body: JSON.stringify({ content }),
+  });
+}
