@@ -16,7 +16,9 @@ const pool = mysql.createPool({
 
 export async function initDatabase() {
   const connection = await pool.getConnection();
-  console.log("Database connected");
+  if (process.env.NODE_ENV !== "production") {
+    console.log("Database connected");
+  }
   connection.release();
 }
 

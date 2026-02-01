@@ -24,7 +24,8 @@ dist-ssr
 *.sw?
 
 # Environment variables
-.env*
+.env
+!.env.example*
 # Coverage reports
 coverage/
 *.lcov
