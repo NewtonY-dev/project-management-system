@@ -10,7 +10,7 @@ export async function getProjectTasks(projectId) {
 }
 
 export async function createTask(projectId, { title, description }) {
-  return apiRequest(`/api/projects/${projectId}/tasks`, {
+  return apiRequest(`/api/tasks/${projectId}/tasks`, {
     method: "POST",
     body: JSON.stringify({ title, description }),
   });
