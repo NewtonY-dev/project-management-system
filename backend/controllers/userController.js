@@ -20,7 +20,6 @@ export const getUsers = async (req, res) => {
       users: users,
     });
   } catch (error) {
-    console.error("Get team members error:", error);
     res.status(500).json({ error: "Failed to retrieve team members" });
   }
 };

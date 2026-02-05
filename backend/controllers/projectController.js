@@ -66,8 +66,6 @@ export const createProject = async (req, res) => {
 
     res.status(201).json(projects[0]);
   } catch (error) {
-    ``;
-    console.error("Project creation error:", error);
     res.status(500).json({ error: "Failed to create project" });
   }
 };
@@ -110,7 +108,6 @@ export const getProjects = async (req, res) => {
     // 4. Return the projects
     res.status(200).json(formattedProjects);
   } catch (error) {
-    console.error("Get projects error:", error);
     res.status(500).json({ error: "Failed to retrieve projects" });
   }
 };
@@ -161,7 +158,6 @@ export const getProjectById = async (req, res) => {
 
     res.status(200).json(formattedProject);
   } catch (error) {
-    console.error("Get project error:", error);
     res.status(500).json({ error: "Failed to retrieve project" });
   }
 };
@@ -224,7 +220,6 @@ export const getProjectTasks = async (req, res) => {
 
     res.status(200).json(formattedTasks);
   } catch (error) {
-    console.error("Get project tasks error:", error);
     res.status(500).json({ error: "Failed to retrieve project tasks" });
   }
 };

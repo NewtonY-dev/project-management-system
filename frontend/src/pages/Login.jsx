@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { login } from "../api/auth";
 import { saveSession, dashboardPathForRole } from "../api/session";
+import GoogleLoginButton from "../components/GoogleLoginButton";
 import "./Auth.css";
 
 export default function Login() {
@@ -124,6 +125,14 @@ export default function Login() {
           <button className="auth__button" disabled={loading}>
             {loading ? "Logging in..." : "Log in"}
           </button>
+          
+          <div className="auth__divider">
+            <span>or</span>
+          </div>
+
+          <div className="auth__social">
+            <GoogleLoginButton />
+          </div>
         </form>
 
         <div className="auth__footer">

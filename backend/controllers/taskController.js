@@ -82,7 +82,6 @@ export const createTask = async (req, res) => {
 
     res.status(201).json(tasks[0]);
   } catch (error) {
-    console.error("Task creation error:", error);
     res.status(500).json({ error: "Failed to create task" });
   }
 };
@@ -222,7 +221,6 @@ export const assignTask = async (req, res) => {
       notification: "The team member will see this task in their dashboard",
     });
   } catch (error) {
-    console.error("Assign task error:", error);
     res.status(500).json({ error: "Failed to assign task" });
   }
 };
@@ -256,7 +254,6 @@ export const getMyTasks = async (req, res) => {
       tasks: tasks,
     });
   } catch (error) {
-    console.error("Get my tasks error:", error);
     res.status(500).json({ error: "Failed to fetch your tasks" });
   }
 };
@@ -361,7 +358,6 @@ export const updateTaskStatus = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Update task status error:", error);
     res.status(500).json({ error: "Failed to update task status" });
   }
 };
@@ -406,11 +402,7 @@ export const getTaskDetail = async (req, res) => {
 
     const task = tasks[0];
     
-    // Debug logging
-    console.log('Task detail for ID', taskId, ':', {
-      assignee_id: task.assignee_id,
-      assigned_name: task.assigned_name,
-      project_title: task.project_title
+    res.status(200).json({
     });
 
     // 3. Get comments for this task
@@ -434,7 +426,6 @@ export const getTaskDetail = async (req, res) => {
       comments: comments,
     });
   } catch (error) {
-    console.error("Get task detail error:", error);
     res.status(500).json({ error: "Failed to fetch task details" });
   }
 };
@@ -532,7 +523,6 @@ export const addComment = async (req, res) => {
       created_at: comment.created_at,
     });
   } catch (error) {
-    console.error("Add comment error:", error);
     res.status(500).json({ error: "Failed to add comment" });
   }
 };

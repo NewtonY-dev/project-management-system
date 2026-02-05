@@ -73,6 +73,38 @@ const validateRole = (role) => {
   return { valid: true, value: roleStr, error: null };
 };
 
+export const googleAuth = async (req, res) => {
+  try {
+    const { token } = req.body; // Get token from POST body
+
+    if (!token) {
+      return res.status(400).json({ error: "No token provided" });
+    }
+
+    // Verify Google token
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+
+    res.status(200).json({
+      success: true,
+      user: {
+        email: payload.email,
+        name: payload.name,
+        picture: payload.picture,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: "Authentication failed",
+      details: error.message,
+    });
+  }
+};
+
 export const register = async (req, res) => {
   try {
     // Validate all inputs with specific error messages
@@ -103,9 +135,26 @@ export const register = async (req, res) => {
     const role = roleValidation.value;
 
     // Check for existing user
-    const [rows] = await db.query("SELECT id FROM users WHERE email = ?", [
-      email,
-    ]);
+    const [rows] = await db.query(
+      "SELECT id, provider FROM users WHERE email = ?",
+      [email],
+    );
+
+    if (rows.length > 0) {
+      const existingUser = rows[0];
+      if (existingUser.provider === "google") {
+        return res.status(409).json({
+          message:
+            "Email already registered with Google. Please use Google login.",
+          provider: "google",
+        });
+      }
+
+      return res.status(409).json({
+        message: "Email already exists",
+        provider: "local",
+      });
+    }
 
     if (rows.length > 0) {
       return res.status(409).json({
@@ -121,7 +170,7 @@ export const register = async (req, res) => {
     // Insert user
     const [result] = await db.query(
       "INSERT INTO users (email, password_hash, name, role) VALUES (?, ?, ?, ?)",
-      [email, hashedPassword, name, role]
+      [email, hashedPassword, name, role],
     );
 
     // Generate JWT token
@@ -141,7 +190,6 @@ export const register = async (req, res) => {
       token,
     });
   } catch (error) {
-    console.error("Registration error:", error);
     res.status(500).json({
       message: "Server error during registration",
       error: error.message,
@@ -203,7 +251,6 @@ export const login = async (req, res) => {
       user: userData,
     });
   } catch (error) {
-    console.error("Login error:", error);
     res.status(500).json({
       message: "Server error during login",
       error: error.message,

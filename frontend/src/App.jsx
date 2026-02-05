@@ -7,6 +7,7 @@ import TMDashboard from "./pages/TMDashboard";
 import TaskDetail from "./pages/TaskDetail";
 import { getUser, dashboardPathForRole } from "./api/session";
 import { RequireAuth, RequireRole } from "./routes/guards";
+import AuthCallback from "./pages/AuthCallback";
 
 function HomeRedirect() {
   const user = getUser();
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/" element={<HomeRedirect />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
         <Route element={<RequireAuth />}>
           <Route element={<RequireRole role="project_manager" />}>
             <Route path="/pm" element={<PMDashboard />} />
