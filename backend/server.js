@@ -1,17 +1,24 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import path from "path";
 import { initDatabase } from "./config/db.js";
 import { validateEnv } from "./config/envValidation.js";
 import authRoutes from "./routes/authRoutes.js";
 import projectRoutes from "./routes/projectRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import documentRoutes from "./routes/documentRoutes.js";
+import { ensureUploadsDirectory } from "./utils/fileUtils.js";
+import { logInfo } from "./utils/logger.js";
 
 dotenv.config();
 const config = validateEnv();
 
 const app = express();
+
+// Ensure uploads directory exists on server startup
+ensureUploadsDirectory();
 
 // Configure CORS
 const corsOptions = {
@@ -50,6 +57,9 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 
+// Serve static files from uploads directory
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
 const PORT = config.PORT;
 
 // Routes
@@ -57,6 +67,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/documents", documentRoutes);
 
 // Basic route
 app.get("/", (req, res) => {

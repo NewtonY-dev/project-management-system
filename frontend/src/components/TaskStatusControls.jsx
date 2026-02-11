@@ -42,7 +42,7 @@ export default function TaskStatusControls({
             style={{ backgroundColor: getStatusColor(task.status) }}
           />
           <span className="task-status-controls__value">
-            {task.status.replace("_", " ")}
+            {task.status?.replace("_", " ") || "No status"}
           </span>
         </div>
         {!task.assignee_id && (
@@ -64,7 +64,7 @@ export default function TaskStatusControls({
           style={{ backgroundColor: getStatusColor(task.status) }}
         />
         <span className="task-status-controls__value">
-          {task.status.replace("_", " ")}
+          {task.status?.replace("_", " ") || "No status"}
         </span>
       </div>
 

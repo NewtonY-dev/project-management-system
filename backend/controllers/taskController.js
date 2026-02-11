@@ -401,9 +401,6 @@ export const getTaskDetail = async (req, res) => {
     }
 
     const task = tasks[0];
-    
-    res.status(200).json({
-    });
 
     // 3. Get comments for this task
     const [comments] = await db.query(
