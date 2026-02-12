@@ -385,6 +385,7 @@ export const getTaskDetail = async (req, res) => {
         t.updated_at,
         p.title as project_title,
         p.id as project_id,
+        p.owner_id as project_owner_id,
         u.name as assigned_name
        FROM tasks t
        JOIN projects p ON t.project_id = p.id

@@ -22,7 +22,7 @@ router.post("/:taskId/documents",
 
 router.get("/:taskId/documents", authMiddleware, validateTaskId, getTaskDocuments);
 
-router.get("/:documentId/download", authMiddleware, validateDocumentId, downloadDocument);
+router.get("/:documentId/download", validateDocumentId, downloadDocument);
 
 router.delete("/:documentId", authMiddleware, validateDocumentId, deleteDocument);
 

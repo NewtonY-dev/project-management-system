@@ -51,3 +51,44 @@ export async function addTaskComment(taskId, content) {
     body: JSON.stringify({ content }),
   });
 }
+
+// Document-related endpoints
+export async function getTaskDocuments(taskId) {
+  return apiRequest(`/api/documents/${taskId}/documents`, { method: "GET" });
+}
+
+export async function uploadDocument(taskId, file) {
+  const token = localStorage.getItem("token");
+  const formData = new FormData();
+  formData.append("document", file);
+  
+  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/documents/${taskId}/documents`, {
+    method: "POST",
+    headers: {
+      ...(token && { Authorization: `Bearer ${token}` }),
+    },
+    body: formData
+  });
+  
+  return handleResponse(response);
+}
+
+export async function deleteDocument(documentId) {
+  return apiRequest(`/api/documents/${documentId}`, { method: "DELETE" });
+}
+
+export async function downloadDocument(documentId) {
+  const token = localStorage.getItem("token");
+  const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+  
+  // Append token as query parameter for download authentication
+  const downloadUrl = `${baseUrl}/api/documents/${documentId}/download?token=${encodeURIComponent(token)}`;
+  
+  // Create temporary link and trigger download
+  const link = document.createElement('a');
+  link.href = downloadUrl;
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}

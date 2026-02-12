@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getUser, logout, dashboardPathForRole } from "../api/session";
-import { getTaskDetail, updateTaskStatus, addTaskComment } from "../api/tasks";
+import { getTaskDetail, updateTaskStatus, addTaskComment, getTaskDocuments, deleteDocument } from "../api/tasks";
 import TaskStatusControls from "../components/TaskStatusControls.jsx";
 import CommentList from "../components/CommentList";
 import CommentForm from "../components/CommentForm";
+import DocumentUploadForm from "../components/DocumentUploadForm";
+import DocumentList from "../components/DocumentList";
 import { LoadingSpinner, ErrorMessage } from "../components/Dashboard";
 import "./Dashboard.css";
 import "./ProjectDetail.css";
@@ -19,6 +21,9 @@ export default function TaskDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
+  const [documents, setDocuments] = useState([]);
+  const [documentsLoading, setDocumentsLoading] = useState(false);
+  const [documentsError, setDocumentsError] = useState("");
 
   // Fetch task data on component mount
   useEffect(() => {
@@ -30,14 +35,29 @@ export default function TaskDetail() {
   async function fetchTaskData() {
     setLoading(true);
     setError("");
+    setDocumentsLoading(true);
+    setDocumentsError("");
 
     try {
       const taskData = await getTaskDetail(taskId);
       setTask(taskData);
+      
+      // Fetch documents after task loads successfully
+      try {
+        const documentsData = await getTaskDocuments(taskId);
+        setDocuments(documentsData.documents || []);
+        
+        if (import.meta.env.DEV) {
+          console.log('Documents fetched:', documentsData.documents);
+        }
+      } catch (docErr) {
+        setDocumentsError(docErr.message || "Failed to load documents");
+      }
     } catch (err) {
       setError(err.message || "Failed to load task details.");
     } finally {
       setLoading(false);
+      setDocumentsLoading(false);
     }
   }
 
@@ -77,6 +97,43 @@ export default function TaskDetail() {
     } catch (err) {
       setError(err.message || "Failed to add comment.");
       throw err; // Re-throw to let CommentForm handle the error state
+    }
+  }
+
+  // Enhanced permission check using project_owner_id from backend
+  const canUploadDocuments = user && (
+    task?.assignee_id === user.id || 
+    task?.project_owner_id === user.id
+  );
+
+  async function handleDocumentUpload(newDocument) {
+    setDocuments(prev => [...prev, newDocument]);
+  }
+
+  async function handleDocumentDelete(documentId) {
+    try {
+      await deleteDocument(documentId);
+      setDocuments(prev => prev.filter(doc => doc.id !== documentId));
+    } catch (err) {
+      setDocumentsError(err.message || "Failed to delete document");
+    }
+  }
+
+  function handleRetryDocuments() {
+    fetchDocuments();
+  }
+
+  async function fetchDocuments() {
+    setDocumentsLoading(true);
+    setDocumentsError("");
+    
+    try {
+      const documentsData = await getTaskDocuments(taskId);
+      setDocuments(documentsData.documents || []);
+    } catch (err) {
+      setDocumentsError(err.message || "Failed to load documents");
+    } finally {
+      setDocumentsLoading(false);
     }
   }
 
@@ -193,6 +250,30 @@ export default function TaskDetail() {
             <div className="task-detail__comment-form">
               <CommentForm onSubmit={handleAddComment} />
             </div>
+          </div>
+
+          {documentsError && (
+            <ErrorMessage error={documentsError} onRetry={handleRetryDocuments} />
+          )}
+
+          <div className="task-detail__documents">
+            <h2 className="task-detail__section-title">Documents</h2>
+            
+            {canUploadDocuments && (
+              <DocumentUploadForm 
+                taskId={task.id} 
+                onUploadSuccess={handleDocumentUpload} 
+              />
+            )}
+            
+            <DocumentList
+              documents={documents}
+              currentUserId={user?.id}
+              onDelete={handleDocumentDelete}
+              loading={documentsLoading}
+              error={documentsError}
+              onRetry={handleRetryDocuments}
+            />
           </div>
         </div>
       </main>

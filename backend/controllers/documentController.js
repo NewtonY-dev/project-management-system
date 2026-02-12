@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import jwt from "jsonwebtoken";
 import { checkDocumentPermissions, createDocument, getDocumentById, fetchTaskDocuments, getDocumentWithAuthor, deleteDocumentFromDatabase } from "../services/documentService.js";
 import { getFilePath, deleteFile, fileExists } from "../utils/fileUtils.js";
 import { logInfo, logError, logDebug } from "../utils/logger.js";
@@ -99,7 +100,19 @@ export const getTaskDocuments = async (req, res) => {
 // Download a document
 export const downloadDocument = async (req, res) => {
   const { documentId } = req;
-  const userId = req.user.id;
+  const { token } = req.query;
+
+  // If token is provided in query, verify it first
+  if (token && !req.user) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = { id: decoded.id };
+    } catch (error) {
+      return sendErrorResponse(res, ERROR_CODES.DOC_DOWNLOAD_PERMISSION_DENIED, 401);
+    }
+  }
+
+  const userId = req.user.id;  // Now safe
 
   try {
     // Get document and task info
